@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <title>OCR App - Testing Index page</title>
+</head>
+<body>
+
+    <h3>Index</h3>
+
+    <!-- <form action="upload" class="fileUpload" enctype="multipart/form-data" method="post"> -->
+    <form action="{{ url_for('upload_file') }}" class="fileUpload" enctype="multipart/form-data" method="post">
+
+        <label class="fileSelect" for="files[]">Upload Photo (JPG, PNG, JPEG, GIF)</label>
+            
+            <br>
+        
+        <input type="file" id="files[]" name="files[]" class="fileElem" >
+        <!-- <h4>Usage</h4> -->
+        <!-- <progress value="40" max="100"></progress> -->
+        <!-- <p>4.00 GB out of 10 GB (40%) (<a href="#" class="upgrade">Upgrade</a>)</p> -->
+
+            <br>
+            <br>
+
+        <input type="submit" value="Submit Picture">
+
+    </form>
+
+        
+
+</body>
+</html>

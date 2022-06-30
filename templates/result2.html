@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+
+{% block main %}
+
+    {% if result == None or result == '' %}
+        <h2>No results returned</h2>
+    {% else %}
+        <h1>Lectura obtenida</h1>
+
+            <br>
+
+        <h3>{{ result }}</h3>
+    {% endif %}
+
+        <br>
+
+    <a href="/">  
+        <input type="button" value="Return to OCR main page"/> 
+    </a>
+
+
+{% endblock %} 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
