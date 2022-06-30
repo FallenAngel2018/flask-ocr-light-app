@@ -6,6 +6,8 @@ import pytesseract
 import cv2
 import os
 
+from dotenv import load_dotenv
+load_dotenv()
 
 # region OCR App method
 
@@ -35,7 +37,15 @@ def ocr_app_get_text(img_path):
 
     # Get txt files for each read image
     text = pytesseract.image_to_string(img)
-    text_imout_grey = pytesseract.image_to_string(imout_grey)
+    # text_imout_grey = pytesseract.image_to_string(imout_grey)
+
+    # Only for servers like PythonEverywhere
+    # Fuente: https://stackoverflow.com/questions/48076964/path-error-with-tesseract
+    # Fuente: https://stackoverflow.com/questions/63740198/how-to-use-tessdata-best-for-tesseract-pytesseract-what-are-the-arguments-and
+    tessdata_dir_config = '--tessdata-dir "{}"'.format(os.getenv("TESSDATA_PREFIX"))
+    print(tessdata_dir_config)
+    text_imout_grey = pytesseract.image_to_string(imout_grey, config=tessdata_dir_config)
+    
 
     print('text:', text)
     print()
