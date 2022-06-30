@@ -25,6 +25,8 @@
 # https://pretius.com/blog/ocr-tesseract-training-data/
 # }
 
+# Video de deploy a PythonEverywhere: https://www.youtube.com/watch?v=6p7GBfHgJq8
+
 from flask import Flask, request, jsonify, render_template
 import os
 from PIL import Image
