@@ -62,20 +62,13 @@ def ocr_app_get_text(img_path):
     # thresh = cv2.threshold(imout_grey, 220, 255, cv2.THRESH_BINARY)[1]
     thresh = cv2.threshold(imout_grey, 150, 235, cv2.THRESH_BINARY)[1]
 
-    # Create custom kernel
+    # Create custom kernel, funciona también con (1,1)
     kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (3,3))
-    # kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (1,1))
     # Perform closing (dilation followed by erosion)
     close = cv2.morphologyEx(thresh, cv2.MORPH_CLOSE, kernel)
 
     # Invert image to use for Tesseract
     result = 255 - close
-
-    cv2.imshow('result', result)
-    cv2.waitKey(0)
-
-    # # close all open windows
-    cv2.destroyAllWindows()
 
     # Get txt files for each read image
     text_result = pytesseract.image_to_string(result, config=tessdata_dir_config)
