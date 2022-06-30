@@ -5,11 +5,21 @@
     {% if result == None or result == '' %}
         <h2>No results returned</h2>
     {% else %}
-        <h1>Lectura obtenida</h1>
+
+        <!-- Fuente div al lado del otro: https://www.youtube.com/watch?v=jCnldI4uIDE -->
+        <div col="4" style="float:left">
+            <img src="data:image/png;base64,{{ image }}" alt="Image read"
+                width="600px" height="600px" />
+        </div>
+
+        <div col="6" style="float:right; margin-left: 50px;"></div>
+            <h1>Lectura obtenida</h1>
 
             <br>
 
-        <h3>{{ result }}</h3>
+            <h3>{{ result }}</h3>
+        </div>
+        
     {% endif %}
 
         <br>

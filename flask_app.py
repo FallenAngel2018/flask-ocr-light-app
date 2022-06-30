@@ -19,17 +19,27 @@
 # 4) Ejecutar (Finalmente) :)
 # python flask_app.py
 
+# Trained fonts: https://github.com/Shreeshrii/tess5train-fonts/tree/main/data/tessdata
+# Improve dictionary {
+# https://vovaprivalov.medium.com/tesseract-ocr-tips-custom-dictionary-to-improve-ocr-d2b9cd17850b
+# https://pretius.com/blog/ocr-tesseract-training-data/
+# }
+
 from flask import Flask, request, jsonify, render_template
 import os
+from PIL import Image
+import base64
+import io
 from werkzeug.utils import secure_filename
 
 from datetime import datetime
 
 from pprint import pprint
-import os
 
+# Carga variables de entorno
 from dotenv import load_dotenv
 load_dotenv()
+
 
 from ocr_app import ocr_app_get_text
 # To copy files
@@ -151,14 +161,14 @@ def upload_file_test():
     # Getting files uploaded in form enctype="multipart/form-data"
     files = request.files['files[]']
     
-    message, result, status_code = upload_file(files)
+    message, result, encoded_img, status_code = upload_file(files)
 
     # pprint(vars(result))
     # print('result.response["ocr_extracted_text"]:', result.response["ocr_extracted_text"])
     # print('result.response[0]:', result.response[0])
 
     if status_code == 200 or status_code == 201:  
-        return render_template("result2.html", result = result)
+        return render_template("result2.html", result = result, image = encoded_img)
     else: # Para probar esteescenario, en el if dejar solo el status_code == 200
         return render_template("result.html", result = message)
 
@@ -168,12 +178,12 @@ def upload_file():
 
     # Obtiene del campo 'files[]' en el request hecho por el usuario los archivos que contenga
     files = request.files.getlist('files[]')
-    message, result, status_code = upload_file(files)
+    message, result, encoded_img, status_code = upload_file(files)
 
     print('result:', result)
 
     if status_code == 200 or status_code == 201:  
-        return render_template("result2.html", result = result)
+        return render_template("result2.html", result = result, image = encoded_img)
     else: # Para probar este escenario, en el if dejar solo el status_code == 200
         return render_template("result.html", result = message)
 
@@ -189,7 +199,7 @@ def upload_file(files):
         resp.status_code = 400
         resp.content_type = "application/json"
         # return resp
-        return errors, "No file uploaded", 400
+        return errors, "No file uploaded", "", 400
 
     # Obtiene del campo 'files[]' en el request hecho por el usuario los archivos que contenga
     files = request.files.getlist('files[]')
@@ -246,7 +256,7 @@ def upload_file(files):
         resp.status_code = 500
         resp.content_type = "application/json"
         # return resp
-        return errors, errors['message'], 500
+        return errors, errors['message'], "", 500
 
 
     if success:
@@ -254,6 +264,14 @@ def upload_file(files):
         resp = jsonify({'message' : 'Files successfully uploaded'})
         # resp.status_code = 201
         # resp.content_type = "application/json"
+
+        image_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+
+        # Fuente: https://stackoverflow.com/questions/67100956/flask-send-a-png-image-to-the-browser-and-display-in-javascript-canvas
+        img = Image.open(image_path, mode='r')
+        img_byte_arr = io.BytesIO()
+        img.save(img_byte_arr, format='PNG')
+        my_encoded_img = base64.encodebytes(img_byte_arr.getvalue()).decode('ascii')
 
         ocr_text_result = ocr_app_get_text(os.path.join(app.config['UPLOAD_FOLDER'], filename))
 
@@ -271,13 +289,13 @@ def upload_file(files):
                 'ocr_extracted_text': ocr_text_result
             })
 
-        return message, ocr_text_result, 201
+        return message, ocr_text_result, my_encoded_img, 201
     else:
         resp = jsonify(errors) 
         resp.status_code = 500
         resp.content_type = "application/json"
         # return resp
-        return errors, errors['message'], 500
+        return errors, errors['message'], "", 500
 
 
 
