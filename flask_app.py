@@ -1,5 +1,24 @@
 
+# Fuente: https://stackoverflow.com/questions/56778211/error-message-mkvirtualenv-is-not-recognized-as-an-internal-or-external-command
+# 1) Crear virtual env
+# Abrir cmd (NO Powershell) en el directorio donde se encuentra la app principal
+# y excribir:
+# py -m venv venv_name
+
+# 2) Activar el entorno virtual
+# cd venv_name
+# cd Scripts
+# activate
+
+# 3) Regresar al directorio principal y ejecutar
+# los siguientes comandos de instalación:
 # pip install flask
+# pip install pytesseract
+# pip install opencv-python
+
+# 4) Ejecutar (Finalmente) :)
+# python flask_app.py
+
 from flask import Flask, request, jsonify, render_template
 import os
 from werkzeug.utils import secure_filename
