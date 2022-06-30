@@ -10,5 +10,8 @@ static/ocr_results/*
 # exception to the rule
 !static/ocr_results/.gitkeep
 
+# exclude everything
+flaskk/*
+
 # .env
 .env
