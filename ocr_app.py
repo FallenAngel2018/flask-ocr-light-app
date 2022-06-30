@@ -70,7 +70,9 @@ def ocr_app_get_text(img_path):
     # Valores casi perfectos en SERVER: imout_grey, 95, 222, cv2.THRESH_BINARY
     # Valores casi perfectos en SERVER: imout_grey, 95, 231, cv2.THRESH_BINARY
     # Valores casi perfectos en SERVER: imout_grey, 95, 240, cv2.THRESH_BINARY
-    thresh = cv2.threshold(imout_grey, 155, 240, cv2.THRESH_BINARY)[1] # 125, 225
+
+    # 155, 240, lee mejor las comillas dobles, pero lee cosas innecesarias
+    thresh = cv2.threshold(imout_grey, 150, 235, cv2.THRESH_BINARY)[1] # 125, 225
 
     # Create custom kernel, funciona también con (1,1)
     kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (3,3))
