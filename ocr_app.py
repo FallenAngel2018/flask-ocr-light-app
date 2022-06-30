@@ -57,6 +57,22 @@ def ocr_app_get_text(img_path):
     if os.path.exists(IMAGE_PATH):
         print("File still exists.")
 
+
+    # Threshold to obtain binary image
+    thresh = cv2.threshold(imout_grey, 220, 255, cv2.THRESH_BINARY)[1]
+
+    # Create custom kernel
+    kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (3,3))
+    # Perform closing (dilation followed by erosion)
+    close = cv2.morphologyEx(thresh, cv2.MORPH_CLOSE, kernel)
+
+    # Invert image to use for Tesseract
+    result = 255 - close
+    # Get txt files for each read image
+    text_result = pytesseract.image_to_string(result)
+
+    print('GaussianBlur result:', text_result)
+
     return text_imout_grey
 
 # endregion
