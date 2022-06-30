@@ -73,7 +73,8 @@ def ocr_app_get_text(img_path):
 
     # 155, 240, lee mejor las comillas dobles, pero lee cosas innecesarias
     # 150, 235, lee mejor las comillas dobles, pero lee MÁS cosas innecesarias
-    thresh = cv2.threshold(imout_grey, 150, 247, cv2.THRESH_BINARY)[1] # 125, 225
+    # 150, 247, lee mejor las comillas dobles, pero lee MÁS cosas innecesarias
+    thresh = cv2.threshold(imout_grey, 160, 248, cv2.THRESH_BINARY)[1] # 125, 225
 
     # Create custom kernel, funciona también con (1,1)
     kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (3,3))
