@@ -28,8 +28,8 @@ from datetime import datetime
 from pprint import pprint
 import os
 
-# from dotenv import load_dotenv
-# load_dotenv()
+from dotenv import load_dotenv
+load_dotenv()
 
 from ocr_app import ocr_app_get_text
 # To copy files
@@ -122,6 +122,7 @@ check_some_folders_existance(False)
 @app.route('/')
 # @app.route('/', methods=['GET'])
 def index():
+    print("os.getenv(TESSDATA_PREFIX)", os.getenv("TESSDATA_PREFIX"))
     return render_template("index.html", title="Index")
 
 @app.route('/index3')
