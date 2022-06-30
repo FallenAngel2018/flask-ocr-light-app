@@ -36,7 +36,7 @@ def ocr_app_get_text(img_path):
 
 
     # Get txt files for each read image
-    text = pytesseract.image_to_string(img)
+    # text = pytesseract.image_to_string(img)
     # text_imout_grey = pytesseract.image_to_string(imout_grey)
 
     # Only for servers like PythonEverywhere
@@ -44,12 +44,12 @@ def ocr_app_get_text(img_path):
     # Fuente: https://stackoverflow.com/questions/63740198/how-to-use-tessdata-best-for-tesseract-pytesseract-what-are-the-arguments-and
     tessdata_dir_config = '--tessdata-dir "{}"'.format(os.getenv("TESSDATA_PREFIX"))
     print(tessdata_dir_config)
-    text_imout_grey = pytesseract.image_to_string(imout_grey, config=tessdata_dir_config)
+    # text_imout_grey = pytesseract.image_to_string(imout_grey, config=tessdata_dir_config)
     
 
-    print('text:', text)
+    # print('text:', text)
     print()
-    print('text_imout_grey:', text_imout_grey)
+    # print('text_imout_grey:', text_imout_grey)
 
 
     remove_picture(IMAGE_PATH)
@@ -69,11 +69,12 @@ def ocr_app_get_text(img_path):
     # Invert image to use for Tesseract
     result = 255 - close
     # Get txt files for each read image
-    text_result = pytesseract.image_to_string(result)
+    text_result = pytesseract.image_to_string(result, config=tessdata_dir_config)
 
     print('GaussianBlur result:', text_result)
 
-    return text_imout_grey
+    # return text_imout_grey 
+    return text_result
 
 # endregion
 
