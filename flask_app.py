@@ -36,11 +36,6 @@ from datetime import datetime
 
 from pprint import pprint
 
-# Carga variables de entorno
-from dotenv import load_dotenv
-load_dotenv()
-
-
 from ocr_app import ocr_app_get_text
 # To copy files
 import shutil

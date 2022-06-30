@@ -6,6 +6,7 @@ import pytesseract
 import cv2
 import os
 
+# Carga variables de entorno
 from dotenv import load_dotenv
 load_dotenv()
 
@@ -59,8 +60,10 @@ def ocr_app_get_text(img_path):
 
 
     # Threshold to obtain binary image
-    # thresh = cv2.threshold(imout_grey, 220, 255, cv2.THRESH_BINARY)[1]
-    thresh = cv2.threshold(imout_grey, 150, 235, cv2.THRESH_BINARY)[1]
+    # Valores originales: imout_grey, 220, 255, cv2.THRESH_BINARY
+    # Valores perfectos en local: imout_grey, 150, 235, cv2.THRESH_BINARY
+    # Valores casi perfectos en local: imout_grey, 135, 222, cv2.THRESH_BINARY
+    thresh = cv2.threshold(imout_grey, 135, 222, cv2.THRESH_BINARY)[1] # 125, 225
 
     # Create custom kernel, funciona también con (1,1)
     kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (3,3))
