@@ -64,7 +64,8 @@ def ocr_app_get_text(img_path):
     # Valores perfectos en local: imout_grey, 150, 235, cv2.THRESH_BINARY
     # Valores casi perfectos en local: imout_grey, 135, 222, cv2.THRESH_BINARY
     # Valores casi perfectos en SERVER: imout_grey, 115, 222, cv2.THRESH_BINARY
-    thresh = cv2.threshold(imout_grey, 95, 222, cv2.THRESH_BINARY)[1] # 125, 225
+    # Valores casi perfectos en SERVER: imout_grey, 95, 222, cv2.THRESH_BINARY
+    thresh = cv2.threshold(imout_grey, 95, 231, cv2.THRESH_BINARY)[1] # 125, 225
 
     # Create custom kernel, funciona también con (1,1)
     kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (3,3))
