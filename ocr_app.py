@@ -63,10 +63,17 @@ def ocr_app_get_text(img_path):
 
     # Threshold to obtain binary image
     # Valores originales: imout_grey, 220, 255, cv2.THRESH_BINARY
-    # Valores perfectos en local: imout_grey, 150, 235, cv2.THRESH_BINARY
-    # Valores casi perfectos en local: imout_grey, 135, 222, cv2.THRESH_BINARY
+    
+    # Valores perfectos en local
+    # imout_grey, 150, 235, cv2.THRESH_BINARY
+    
+    # Valores casi perfectos en local
+    # imout_grey, 140, 235, cv2.THRESH_BINARY
+    # imout_grey, 135, 222, cv2.THRESH_BINARY
 
-    # Valores casi perfectos en SERVER: imout_grey, 115, 222, cv2.THRESH_BINARY
+    # Valores casi perfectos en SERVER
+    # imout_grey, 115, 222, cv2.THRESH_BINARY
+
 
     # Resultados iguales
     # Valores casi perfectos en SERVER: imout_grey, 95, 222, cv2.THRESH_BINARY
@@ -85,7 +92,7 @@ def ocr_app_get_text(img_path):
     # 210, 248, solo lee mal la letra B en Bound, ni la lee
     # 190, 240, la B de Bound la lee como un espacio y una letra s
     # 190, 235, exactamente mismo resultado que el anterior
-    thresh = cv2.threshold(imout_grey, 140, 235, cv2.THRESH_BINARY)[1] # 140, 235
+    thresh = cv2.threshold(imout_grey, 100, 222, cv2.THRESH_BINARY)[1] # 140, 235
 
     # Create custom kernel, funciona también con (1,1)
     kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (3,3))
@@ -175,7 +182,7 @@ def ocr_app_get_text(img_path):
         print("File still exists.")
 
 
-    print(results_list)
+    # print(results_list)
     return results_list
 
     return text_imout_grey, text_result
