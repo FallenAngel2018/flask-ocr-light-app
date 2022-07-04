@@ -10,6 +10,8 @@ import os
 from dotenv import load_dotenv
 load_dotenv()
 
+import numpy
+
 # region OCR App method
 
 """
@@ -35,6 +37,7 @@ def ocr_app_get_text(img_path):
 
     print('IMAGE_PATH:', IMAGE_PATH)
 
+    results_list = []
 
     # Get txt files for each read image
     # text = pytesseract.image_to_string(img)
@@ -44,20 +47,19 @@ def ocr_app_get_text(img_path):
     # Fuente: https://stackoverflow.com/questions/48076964/path-error-with-tesseract
     # Fuente: https://stackoverflow.com/questions/63740198/how-to-use-tessdata-best-for-tesseract-pytesseract-what-are-the-arguments-and
     tessdata_dir_config = '--tessdata-dir "{}"'.format(os.getenv("TESSDATA_PREFIX"))
-    print(tessdata_dir_config)
-    # text_imout_grey = pytesseract.image_to_string(imout_grey, config=tessdata_dir_config)
+    print(tessdata_dir_config) # lang="spa"
+    text_imout_grey = pytesseract.image_to_string(imout_grey, config=tessdata_dir_config)
     
 
     # print('text:', text)
     print()
-    # print('text_imout_grey:', text_imout_grey)
+    print('text_imout_grey:', text_imout_grey)
+
+    if text_imout_grey != "" and text_imout_grey is not None:
+        results_list.append(text_imout_grey)
 
 
-    remove_picture(IMAGE_PATH)
-    
-    if os.path.exists(IMAGE_PATH):
-        print("File still exists.")
-
+    # region Test 2 - Threshold
 
     # Threshold to obtain binary image
     # Valores originales: imout_grey, 220, 255, cv2.THRESH_BINARY
@@ -74,7 +76,16 @@ def ocr_app_get_text(img_path):
     # 155, 240, lee mejor las comillas dobles, pero lee cosas innecesarias
     # 150, 235, lee mejor las comillas dobles, pero lee MÁS cosas innecesarias
     # 150, 247, lee mejor las comillas dobles, pero lee MÁS cosas innecesarias
-    thresh = cv2.threshold(imout_grey, 160, 248, cv2.THRESH_BINARY)[1] # 125, 225
+    # 160, 248, solo lee bien Ender Lilies She whispers from the abyss,
+    # todo lo demás lo lee mal y lee caracteres extra
+    # 230, 248, solo lee el texto con una fuente con mayor grosor, las palabras
+    # más finas desaparecen de la imagen
+    # 150, 247, lee mejor las comillas dobles, pero lee mal la letra B en Bound
+    # 170, 248, lee MAL las comillas dobles, y lee mal la letra B en Bound, la lee como S
+    # 210, 248, solo lee mal la letra B en Bound, ni la lee
+    # 190, 240, la B de Bound la lee como un espacio y una letra s
+    # 190, 235, exactamente mismo resultado que el anterior
+    thresh = cv2.threshold(imout_grey, 140, 235, cv2.THRESH_BINARY)[1] # 140, 235
 
     # Create custom kernel, funciona también con (1,1)
     kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (3,3))
@@ -88,9 +99,86 @@ def ocr_app_get_text(img_path):
     text_result = pytesseract.image_to_string(result, config=tessdata_dir_config)
 
     print('GaussianBlur result:', text_result)
+    print()
 
-    # return text_imout_grey 
-    return text_result
+    if len(text_result) != 0:
+        results_list.append(text_result)
+
+    # endregion
+
+
+    # region Test 3 - New Preprocessing
+
+    # Fuente: https://stackoverflow.com/questions/62953886/reading-numbers-using-pytesseract
+    # Page segmentation mode, PSM was changed to 6 since each page is a single uniform text block.
+    custom_config = r'--psm 6 --oem 3 -c tessedit_char_whitelist=0123456789'
+
+    # load the image as grayscale
+    # img = cv2.imread("5.png",cv2.IMREAD_GRAYSCALE)
+    img = imout_grey
+
+    # Change all pixels to black, if they aren't white already (since all characters were white)
+    img[img != 255] = 0
+
+    # Scale it 10x
+    scaled = cv2.resize(img, (0,0), fx=10, fy=10, interpolation = cv2.INTER_CUBIC)
+
+    # Retained your bilateral filter
+    filtered = cv2.bilateralFilter(scaled, 11, 17, 17)
+
+    # Thresholded OTSU method
+    thresh = cv2.threshold(filtered, 0, 255, cv2.THRESH_BINARY_INV | cv2.THRESH_OTSU)[1]
+
+    # Erode the image to bulk it up for tesseract
+    kernel = numpy.ones((4,4),numpy.uint8)
+    eroded = cv2.erode(thresh, kernel, iterations = 2)
+
+    pre_processed = eroded
+
+    # Feed the pre-processed image to tesseract and print the output.
+    ocr_text = pytesseract.image_to_string(pre_processed, config=custom_config)
+    if len(ocr_text) != 0:
+        print("Test 3 ocr_text:",ocr_text)
+        results_list.append(ocr_text)
+    else: print("No string detected in test 3")
+
+    # endregion
+
+    # region Test 4 
+
+    # Fuente: https://stackoverflow.com/questions/23260345/opencv-binary-adaptive-threshold-ocr/23260699#23260699
+    image = cv2.imread(IMAGE_PATH, cv2.IMREAD_GRAYSCALE) # reading image
+    tessdata_dir_config = '--tessdata-dir "{}"'.format(os.getenv("TESSDATA_PREFIX"))
+    if image is None:
+        print('Can not find the image!')
+        exit(-1)
+
+    # Thresholding image using ostu method
+    ret, thresh = cv2.threshold(image, 0, 255, cv2.THRESH_BINARY_INV | cv2.THRESH_OTSU) 
+    # Applying closing operation using ellipse kernel
+    N = 3
+    kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (N, N))
+    thresh = cv2.morphologyEx(thresh, cv2.MORPH_CLOSE, kernel)
+
+    ocr_text = pytesseract.image_to_string(thresh, config=tessdata_dir_config)
+    if len(ocr_text) != 0:
+        print("Test 4 ocr_text:",ocr_text)
+        results_list.append(ocr_text)
+    else: print("No string detected in test 4")
+
+    # endregion
+
+
+    remove_picture(IMAGE_PATH)
+    
+    if os.path.exists(IMAGE_PATH):
+        print("File still exists.")
+
+
+    print(results_list)
+    return results_list
+
+    return text_imout_grey, text_result
 
 # endregion
 

@@ -2,7 +2,7 @@
 
 {% block main %}
 
-    {% if result == None or result == '' %}
+    {% if results == None or results == '' %}
         <h2>No results returned</h2>
     {% else %}
 
@@ -13,16 +13,54 @@
         </div>
 
         <div col="6" style="float:right; margin-left: 50px;"></div>
-            <h1>Lectura obtenida</h1>
 
-            <br>
+            {% if results|length > 1 %}
 
-            <h3>{{ result }}</h3>
+                <h1>Lecturas obtenidas</h1>
+
+                <br>
+
+                {% for ocr_result in results %}
+
+                    <h3>Lectura {{ loop.index }}: {{ ocr_result }}</h3>
+                    <!-- <h3>Lectura {{ i }}: {{ results[ocr_result] }}</h3> -->
+
+                {% endfor %}
+
+            {% else %}
+
+                <h1>Lectura obtenida</h1>
+
+                <h3>Lectura: {{ results[0] }}</h3>
+
+            {% endif %}
+
+            
+            <!-- {% if results["results_1"] != None and results["results_2"] != None 
+                and results["results_1"] != "" and results["results_2"] != "" %}
+
+                <h1>Lecturas obtenidas</h1>
+
+                <br>
+
+                <h3>Lectura 1: {{ results["results_1"] }}</h3>
+                <h3>Lectura 2: {{ results["results_2"] }}</h3>
+
+            {% else %}
+
+                <h1>Lectura obtenida</h1>
+
+                <h3>Lectura: {{ results["results_1"] if results["results_1"] else results["results_2"] }}</h3>
+
+            {% endif %} -->
+
+
         </div>
         
-    {% endif %}
-
         <br>
+
+    {% endif %}
+    
 
     <a href="/">  
         <input type="button" value="Return to OCR main page"/> 

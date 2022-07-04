@@ -158,16 +158,19 @@ def upload_file_test():
     # Getting files uploaded in form enctype="multipart/form-data"
     files = request.files['files[]']
     
-    message, result, encoded_img, status_code = upload_file(files)
+    message, results, encoded_img, status_code = upload_file(files)
 
-    # pprint(vars(result))
+    pprint(vars(results))
     # print('result.response["ocr_extracted_text"]:', result.response["ocr_extracted_text"])
     # print('result.response[0]:', result.response[0])
 
+    if not results:
+        print("List is empty")
+
     if status_code == 200 or status_code == 201:  
-        return render_template("result2.html", result = result, image = encoded_img)
+        return render_template("result2.html", results = results, image = encoded_img)
     else: # Para probar esteescenario, en el if dejar solo el status_code == 200
-        return render_template("result.html", result = message)
+        return render_template("result.html", results = message)
 
 
 @app.route('/upload', methods=['POST'])
@@ -175,14 +178,15 @@ def upload_file():
 
     # Obtiene del campo 'files[]' en el request hecho por el usuario los archivos que contenga
     files = request.files.getlist('files[]')
-    message, result, encoded_img, status_code = upload_file(files)
+    message, results, encoded_img, status_code = upload_file(files)
 
-    print('result:', result)
+    if not results:
+        print("List is empty")
 
     if status_code == 200 or status_code == 201:  
-        return render_template("result2.html", result = result, image = encoded_img)
+        return render_template("result2.html", results = results, image = encoded_img)
     else: # Para probar este escenario, en el if dejar solo el status_code == 200
-        return render_template("result.html", result = message)
+        return render_template("result.html", results = message)
 
 
 
@@ -195,8 +199,10 @@ def upload_file(files):
         resp = jsonify(errors)
         resp.status_code = 400
         resp.content_type = "application/json"
+        error_messages = { "result_1": "No file uploaded", "result_2": ""}
         # return resp
-        return errors, "No file uploaded", "", 400
+        return errors, error_messages, "", 400
+        # return errors, "No file uploaded", "", 400
 
     # Obtiene del campo 'files[]' en el request hecho por el usuario los archivos que contenga
     files = request.files.getlist('files[]')
@@ -253,7 +259,9 @@ def upload_file(files):
         resp.status_code = 500
         resp.content_type = "application/json"
         # return resp
-        return errors, errors['message'], "", 500
+        error_messages = { "result_1": errors['message'], "result_2": ""}
+        return errors, error_messages, "", 500
+        # return errors, errors['message'], "", 500
 
 
     if success:
@@ -270,7 +278,21 @@ def upload_file(files):
         img.save(img_byte_arr, format='PNG')
         my_encoded_img = base64.encodebytes(img_byte_arr.getvalue()).decode('ascii')
 
-        ocr_text_result = ocr_app_get_text(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+        message = ""
+        # grey_text, ocr_text_result  = ocr_app_get_text(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+        results  = ocr_app_get_text(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+
+        if not results:
+            return message, results, my_encoded_img, 201
+        else:
+            # Using for loop
+            for ocr_text in results:
+                ocr_text = ocr_text.replace("\n\n", " ").replace("\u201c", '\"').replace("\u201d", '"').replace("\\", "")
+            
+            message = 'Files successfully uploaded'
+            return message, results, my_encoded_img, 201
+
+
 
 
         # Si el texto extraído no está vacío...
@@ -281,18 +303,29 @@ def upload_file(files):
 
             # if upload_success:
             # replace is only for making json esthetic, when returned, left the \n\n and else
-            resp = jsonify({
-                'message' : message,
-                'ocr_extracted_text': ocr_text_result
-            })
+            # resp = jsonify({
+            #     'message' : message,
+            #     'ocr_extracted_text': ocr_text_result
+            # })
 
-        return message, ocr_text_result, my_encoded_img, 201
+        # Si el texto extraído no está vacío...
+        if grey_text != '':
+
+            message = 'Files successfully uploaded'
+            grey_text = grey_text.replace("\n\n", " ").replace("\u201c", '\"').replace("\u201d", '"').replace("\\", "")
+
+        results = { "result_1": grey_text, "result_2": ocr_text_result }
+
+        return message, results, my_encoded_img, 201
+        # return message, ocr_text_result, my_encoded_img, 201
     else:
         resp = jsonify(errors) 
         resp.status_code = 500
         resp.content_type = "application/json"
         # return resp
-        return errors, errors['message'], "", 500
+        results = { "result_1": errors['message'], "result_2": "" }
+        return errors, results, "", 500
+        # return errors, errors['message'], "", 500
 
 
 
