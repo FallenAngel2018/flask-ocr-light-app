@@ -92,7 +92,7 @@ def ocr_app_get_text(img_path):
     # 210, 248, solo lee mal la letra B en Bound, ni la lee
     # 190, 240, la B de Bound la lee como un espacio y una letra s
     # 190, 235, exactamente mismo resultado que el anterior
-    thresh = cv2.threshold(imout_grey, 100, 222, cv2.THRESH_BINARY)[1] # 140, 235
+    thresh = cv2.threshold(imout_grey, 75, 222, cv2.THRESH_BINARY)[1] # 140, 235
 
     # Create custom kernel, funciona también con (1,1)
     kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (3,3))
