@@ -120,7 +120,7 @@ def check_some_folders_existance(show):
 
 # endregion
 
-check_some_folders_existance(True)
+check_some_folders_existance(False)
 
 
 
