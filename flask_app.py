@@ -120,7 +120,7 @@ def check_some_folders_existance(show):
 
 # endregion
 
-check_some_folders_existance(False)
+check_some_folders_existance(True)
 
 
 
@@ -168,8 +168,9 @@ def upload_file_test():
         print("List is empty")
 
     if status_code == 200 or status_code == 201:  
-        return render_template("result2.html", results = results, image = encoded_img)
-    else: # Para probar esteescenario, en el if dejar solo el status_code == 200
+        # return render_template("result2.html", results = results, image = encoded_img)
+        return jsonify(results)
+    else: # Para probar este escenario, en el if dejar solo el status_code == 200
         return render_template("result.html", results = message)
 
 
@@ -184,7 +185,9 @@ def upload_file():
         print("List is empty")
 
     if status_code == 200 or status_code == 201:  
-        return render_template("result2.html", results = results, image = encoded_img)
+        # return render_template("result2.html", results = results, image = encoded_img)
+        # return render_template("result3.html", results = results)
+        return jsonify(results)
     else: # Para probar este escenario, en el if dejar solo el status_code == 200
         return render_template("result.html", results = message)
 
