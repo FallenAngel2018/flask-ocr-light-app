@@ -158,7 +158,7 @@ def upload_file_test():
     # Getting files uploaded in form enctype="multipart/form-data"
     files = request.files['files[]']
 
-    print(files)
+    print("files:",files)
     
     message, results, encoded_img, status_code = upload_file(files)
 
@@ -181,8 +181,8 @@ def upload_file():
 
     # Obtiene del campo 'files[]' en el request hecho por el usuario los archivos que contenga
     files = request.files.getlist('files[]')
-    
-    print(files)
+
+    print("files:",files)
 
     message, results, encoded_img, status_code = upload_file(files)
 
