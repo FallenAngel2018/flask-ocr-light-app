@@ -157,10 +157,12 @@ def html_result2(result=None):
 def upload_file_test():
     # Getting files uploaded in form enctype="multipart/form-data"
     files = request.files['files[]']
+
+    print(files)
     
     message, results, encoded_img, status_code = upload_file(files)
 
-    pprint(vars(results))
+    # pprint(vars(results))
     # print('result.response["ocr_extracted_text"]:', result.response["ocr_extracted_text"])
     # print('result.response[0]:', result.response[0])
 
@@ -179,6 +181,9 @@ def upload_file():
 
     # Obtiene del campo 'files[]' en el request hecho por el usuario los archivos que contenga
     files = request.files.getlist('files[]')
+    
+    print(files)
+
     message, results, encoded_img, status_code = upload_file(files)
 
     if not results:
@@ -195,7 +200,8 @@ def upload_file():
 
 def upload_file(files):
     # Check if the post request has the file part
-    if 'files[]' not in request.files and 'photo' not in request.files:
+    # if 'files[]' not in request.files and 'photo' not in request.files:
+    if 'files[]' not in request.files and 'Imagen' not in request.files:
         # resp = jsonify({'message' : 'No file part in the request'})
         # resp = jsonify({'message' : 'No file uploaded in the request :/, go back and upload some.'})
         errors['message'] = 'No file uploaded in the request :/, go back and upload some.'
