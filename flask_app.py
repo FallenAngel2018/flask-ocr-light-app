@@ -158,7 +158,7 @@ def upload_file_test():
     # Getting files uploaded in form enctype="multipart/form-data"
     files = request.files['files[]']
 
-    print("files:",files)
+    # print("files:",files)
     
     message, results, encoded_img, status_code = upload_file(files)
 
@@ -168,6 +168,8 @@ def upload_file_test():
 
     if not results:
         print("List is empty")
+
+    print(results)
 
     if status_code == 200 or status_code == 201:  
         # return render_template("result2.html", results = results, image = encoded_img)
@@ -188,6 +190,8 @@ def upload_file():
 
     if not results:
         print("List is empty")
+
+    print(results)
 
     if status_code == 200 or status_code == 201:  
         # return render_template("result2.html", results = results, image = encoded_img)
