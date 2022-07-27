@@ -169,7 +169,13 @@ def upload_file_test():
     if not results:
         print("List is empty")
 
-    print(results)
+    print("natural results:", results)
+
+    for result in results:
+        result.replace('\n', '')
+
+    print("fixed results:", results)
+
 
     if status_code == 200 or status_code == 201:  
         # return render_template("result2.html", results = results, image = encoded_img)
@@ -191,7 +197,11 @@ def upload_file():
     if not results:
         print("List is empty")
 
-    print(results)
+    for result in results:
+        result.replace('\n', '')
+
+    print("results fixed:", results)
+
 
     if status_code == 200 or status_code == 201:  
         # return render_template("result2.html", results = results, image = encoded_img)
