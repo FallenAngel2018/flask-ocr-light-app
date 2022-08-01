@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "gvision-358116",
+  "private_key_id": "cdad80b21c64edc9741cb18458e7376ba75f1c94",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQC55zqe1wgalkz3\n8udFr58QFj4EvCVpsnx6Uz7KeG14rvQcNCsSej3ISVU1gEwDAkJD7bfoVru9Kvwi\n3ffcSaUsOTUI1Sz40JJXlrPdCvPknyVy8KMGAxnsA0ciZFSF+q86hs59d4DVzsG0\n9S5nv88HPc6OoxTNv6IvK7BVM3AhcsufnzvgqmtYJJ7TXwWiQ3J35wN1b56/IRXP\nItoCFhiDeCABjg4clNecF3VQoa9Z7jmqEjyZjTag5M4MjoyRjCt5iRr6ayQCJhYV\ncri4AxfeHcPEGtUA5fafWuwUrfIYE6JmNOp3OwUtYwopzc9m4TrvFNHx+8K+ddcM\nNl53FDyNAgMBAAECggEABFysV7NIdaU+r5ezvQMaqpw2/tHyV8lQGeevor0SJoGG\naU4BD7kuD2/HD88PmYd5ShI/HTTByXXDfkbyjKjutvutpqQn3ru4H1WCKWbbI6tn\nS8vhK2AxwMOv7NrpT856w5cLq858x6eHDImvOdB6mVsmKFsjvxMmyVAPXmRrVmGK\nroIehqPSRWtr/MYE02CmXkD3xV755ecOGAjxeJqGo7RV4HCmy/u2Biu73Th5c9eB\nZB68SBYzOe6YGmKwwkZ5HwC9/0FAK2p4vZBS1kK77MUiJMNzZzpl4rnOloQ5jrgt\nvWqG0EKlb5Dgi2qcIlhurztkr99TgDY2h5QCLeJviQKBgQDiRnoqh+fR+ao1l+T2\nHKCvOl4pqtlDf+PaWoZMFBSkT/SF/qyxLVABsDL9gWJBCJjdCtwVxEsdmIrkSkkM\nc8LQkS/A3gwtH8D4hyd3Qqw6THGwAuJCUouF6VafIggcZgQntY+QZHiDXvIExHz9\nQJj+8KZ3e+Jdc7nBqydviKUsVQKBgQDSUw9WOZzdgFL4s/am8zks4tT33gYkfwyf\nHl7KWmH4WHnkDDLFwEeKJwg2juPBq4eEDlsASBa4VEDE7eGXGIumqJxxNcJSdell\nom1RF9nEzg1QaUOIXw9hv8PnrQzJ1+UIzdF4vZJnd7z1Mtjy8/QTQ0xH2ttyGrZM\nxHr5xSuHWQKBgGHCBSG+2Z7T+H9zAk56C8nos6nY0EjjRfOeTIst2cUrbf8+Cin5\n46j3EPCJJ4PlTPWirXcR+UnuD4OVvH2OvcoSD8mJpUURhPNaoOhbe8EsKanbdRkm\nRHU0XGIf99UdFgp53G6Lma1YJcN9iGp5sB/kpGbWtPOe/c/4O+9p38KJAoGAOJn7\nxaOpkH6pVZ7w4QsRtv+weqg4lPfQCL5emixqsy/0Vafmvgs59Xb9odkgeA1WYfaP\nDOtZme+qopS2IjiL1KUJvPnPuutajWyB6NH3XBxrvtklQHz8oby+1wleKK++RnlF\nRy4VSV0S8BXoBrIaXFi/HZNLfVCtAMnbon4qcbkCgYA6z4yrQVWBpQI3OqHxCMtM\ndIQyr1HrqmpVEnp29Md8g7qtF39Zkyrwmv6S7tQMNnJj1S75WUvvyggX6VCbnJp7\nYdXYyn772f272y9hdQmQcbETHOP4WMX2khKpJHORJjnLRP/yjhb/Tif7N3CkU5uZ\nEp6VCk2BWJappwLX3BBE7Q==\n-----END PRIVATE KEY-----\n",
+  "client_email": "app-agua@gvision-358116.iam.gserviceaccount.com",
+  "client_id": "101117446121334096161",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/app-agua%40gvision-358116.iam.gserviceaccount.com"
+}

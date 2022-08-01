@@ -38,7 +38,7 @@ from datetime import datetime
 
 from pprint import pprint
 
-from ocr_app import ocr_app_get_text
+from ocr_app import ocr_app_get_text, ocr_gLens_api
 # To copy files
 import shutil
 
@@ -302,8 +302,11 @@ def upload_file(files):
         my_encoded_img = base64.encodebytes(img_byte_arr.getvalue()).decode('ascii')
 
         message = ""
-        # grey_text, ocr_text_result  = ocr_app_get_text(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-        results  = ocr_app_get_text(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+        # grey_text, ocr_text_result = ocr_app_get_text(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+        
+        # results = ocr_app_get_text(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+        results = ocr_gLens_api(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+        
 
         if not results:
             return message, results, my_encoded_img, 201

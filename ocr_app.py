@@ -12,6 +12,16 @@ load_dotenv()
 
 import numpy
 
+# Google Lens
+# pip install google-cloud-vision
+import io
+# import os
+from google.cloud import vision
+from google.cloud.vision_v1 import types
+
+os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = 'gvision-358116-cdad80b21c64.json'
+
+
 # region OCR App method
 
 """
@@ -243,6 +253,78 @@ def ocr_app_get_text(img_path):
     return results_list
 
     return text_imout_grey, text_result
+
+# endregion
+
+
+# region OCR Google Lens API
+
+"""
+    img_path: Ruta donde se encuentra la imagen que se quiere leer.
+"""
+def ocr_gLens_api(img_path):
+
+    results_list = []
+
+    IMAGE_PATH = img_path
+
+    # Instantiates a client
+    client = vision.ImageAnnotatorClient()
+
+    #set this thumbnail as the url
+    image = types.Image()
+
+    # IMAGE_PATH = 'number3.jpg'
+
+    with io.open(IMAGE_PATH, 'rb') as image_file:        
+            content = image_file.read()  
+
+    image = vision.Image(content=content)
+
+
+    # Se crea una celda en VsCode -> # %%
+    #### TEXT DETECTION ######
+
+    response_text = client.text_detection(image=image) # image
+
+    # for r in response_text.text_annotations:
+    #     d = {
+    #         'text': r.description
+    #     }
+    #     print(d)
+        # Resultados:
+        #{'text': '38762'}
+        #{'text': '38762'}
+
+    glens_results = response_text.text_annotations
+    print("glens_results:", glens_results)
+    
+    text_result = ""
+
+    # Lista vacía = []
+    if not glens_results:
+        print("List is empty")
+        text_result = "Error en la obtención de resultados."
+    
+    # Lista NO está vacía
+    if glens_results:
+        text_result = response_text.text_annotations[0].description
+        print("text_result:", text_result)
+        # Resultado:
+        # 38762
+
+
+    results_list.append(text_result)
+
+
+    remove_picture(IMAGE_PATH)
+    
+    if os.path.exists(IMAGE_PATH):
+        print("File still exists.")
+
+
+    # print(results_list)
+    return results_list
 
 # endregion
 
