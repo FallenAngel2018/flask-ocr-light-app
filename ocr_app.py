@@ -315,6 +315,9 @@ def ocr_gLens_api(img_path):
 
 
     results_list.append(text_result)
+    results_list.append("")
+    results_list.append("")
+    results_list.append("")
 
 
     remove_picture(IMAGE_PATH)
