@@ -204,9 +204,9 @@ def upload_file():
 
 
     if status_code == 200 or status_code == 201:  
-        # return render_template("result2.html", results = results, image = encoded_img)
+        return render_template("result2.html", results = results, image = encoded_img)
         # return render_template("result3.html", results = results)
-        return jsonify(results)
+        # return jsonify(results)
     else: # Para probar este escenario, en el if dejar solo el status_code == 200
         return render_template("result.html", results = message)
 

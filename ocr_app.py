@@ -37,6 +37,11 @@ def ocr_app_get_text(img_path):
 
     print('IMAGE_PATH:', IMAGE_PATH)
 
+    
+    
+
+
+
     results_list = []
 
     # Get txt files for each read image
@@ -95,7 +100,7 @@ def ocr_app_get_text(img_path):
     # 210, 248, solo lee mal la letra B en Bound, ni la lee
     # 190, 240, la B de Bound la lee como un espacio y una letra s
     # 190, 235, exactamente mismo resultado que el anterior
-    thresh = cv2.threshold(imout_grey, 75, 222, cv2.THRESH_BINARY)[1] # 75, 222
+    thresh = cv2.threshold(imout_grey, 150, 235, cv2.THRESH_BINARY)[1] # 75, 222
 
     # Create custom kernel, funciona también con (1,1)
     kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (3,3))
@@ -121,36 +126,64 @@ def ocr_app_get_text(img_path):
 
     # Fuente: https://stackoverflow.com/questions/62953886/reading-numbers-using-pytesseract
     # Page segmentation mode, PSM was changed to 6 since each page is a single uniform text block.
-    custom_config = r'--psm 6 --oem 3 -c tessedit_char_whitelist=0123456789'
+    # custom_config = r'--psm 6 --oem 3 -c tessedit_char_whitelist=0123456789'
 
-    # load the image as grayscale
-    # img = cv2.imread("5.png",cv2.IMREAD_GRAYSCALE)
-    img = imout_grey
+    # # load the image as grayscale
+    # # img = cv2.imread("5.png",cv2.IMREAD_GRAYSCALE)
+    # img = imout_grey
 
-    # Change all pixels to black, if they aren't white already (since all characters were white)
-    img[img != 255] = 0
+    # # Change all pixels to black, if they aren't white already (since all characters were white)
+    # img[img != 255] = 0
 
-    # Scale it 10x
-    scaled = cv2.resize(img, (0,0), fx=10, fy=10, interpolation = cv2.INTER_CUBIC)
+    # # Scale it 10x
+    # scaled = cv2.resize(img, (0,0), fx=10, fy=10, interpolation = cv2.INTER_CUBIC)
 
-    # Retained your bilateral filter
-    filtered = cv2.bilateralFilter(scaled, 11, 17, 17)
+    # # Retained your bilateral filter
+    # filtered = cv2.bilateralFilter(scaled, 11, 17, 17)
 
-    # Thresholded OTSU method
-    thresh = cv2.threshold(filtered, 0, 255, cv2.THRESH_BINARY_INV | cv2.THRESH_OTSU)[1]
+    # # Thresholded OTSU method
+    # thresh = cv2.threshold(filtered, 0, 255, cv2.THRESH_BINARY_INV | cv2.THRESH_OTSU)[1]
 
-    # Erode the image to bulk it up for tesseract
-    kernel = numpy.ones((4,4),numpy.uint8)
-    eroded = cv2.erode(thresh, kernel, iterations = 2)
+    # # Erode the image to bulk it up for tesseract
+    # kernel = numpy.ones((4,4),numpy.uint8)
+    # eroded = cv2.erode(thresh, kernel, iterations = 2)
 
-    pre_processed = eroded
+    # pre_processed = eroded
 
-    # Feed the pre-processed image to tesseract and print the output.
-    ocr_text = pytesseract.image_to_string(pre_processed, config=custom_config)
+    # # Feed the pre-processed image to tesseract and print the output.
+    # ocr_text = pytesseract.image_to_string(pre_processed, config=custom_config)
+    # if len(ocr_text) != 0:
+    #     print("Test 3 ocr_text:",ocr_text)
+    #     results_list.append(ocr_text)
+    # else: print("No string detected in test 3")
+
+    
+
+    custom_config = '--psm 6 --oem 3 -c tessedit_char_whitelist=0123456789'
+    
+    thresh = cv2.threshold(imout_grey, 75, 222, cv2.THRESH_BINARY)[1] # 150, 235
+
+    # Create custom kernel, funciona también con (1,1)
+    kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (3,3))
+    # Perform closing (dilation followed by erosion)
+    close = cv2.morphologyEx(thresh, cv2.MORPH_CLOSE, kernel)
+
+    # Invert image to use for Tesseract
+    result = 255 - close
+
+    # Get txt files for each read image
+    ocr_text = pytesseract.image_to_string(result, config=custom_config)
+
+    print('GaussianBlur result:', ocr_text)
+    print()
+
+    # if len(text_result) != 0:
+    #     results_list.append(text_result)
     if len(ocr_text) != 0:
         print("Test 3 ocr_text:",ocr_text)
         results_list.append(ocr_text)
     else: print("No string detected in test 3")
+
 
     # endregion
 
@@ -164,9 +197,13 @@ def ocr_app_get_text(img_path):
         exit(-1)
 
     # Thresholding image using ostu method
-    ret, thresh = cv2.threshold(image, 0, 255, cv2.THRESH_BINARY_INV | cv2.THRESH_OTSU) 
+    # Original
+    # ret, thresh = cv2.threshold(image, 0, 255, cv2.THRESH_BINARY_INV | cv2.THRESH_OTSU)
+    ret, thresh = cv2.threshold(image, 150, 235, cv2.THRESH_BINARY_INV | cv2.THRESH_OTSU)
     # Applying closing operation using ellipse kernel
-    N = 3
+    # N = 3 # Valor Original
+    # N = 7 # Con 7 lee mejor el medidor de agua de Joshua, con 9 también funciona decente
+    N = 3 # 13 y 17 más o menos: 1 596\n
     kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (N, N))
     thresh = cv2.morphologyEx(thresh, cv2.MORPH_CLOSE, kernel)
 
@@ -177,6 +214,23 @@ def ocr_app_get_text(img_path):
     else: print("No string detected in test 4")
 
     # endregion
+
+
+    #region Show imgs (disable later)
+
+    # Shows images in screen to user
+    cv2.imshow('img', img)
+    cv2.imshow('imout', imout)
+    # cv2.imshow('imout_grey', imout_grey)
+    cv2.imshow('result', result)
+    cv2.imshow('thresh', thresh)
+
+    cv2.waitKey(0)
+
+    # close all open windows
+    cv2.destroyAllWindows()
+
+    #endregion
 
 
     remove_picture(IMAGE_PATH)
